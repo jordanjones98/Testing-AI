@@ -64,8 +64,8 @@ exports.handle = function handle(client) {
       // configure responses to be automatically sent as predicted by the machine learning model
     },
     streams: {
-      greeting: handleGreeting
-      goodbye: handleGoodbye
+      greeting: handleGreeting,
+      goodbye: handleGoodbye,
       main: 'onboarding',
       onboarding: [sayHello],
       end: [untrained]
