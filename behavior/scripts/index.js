@@ -87,14 +87,14 @@
 
 exports.handle = function handle(client) {
   const sayHello = client.createStep({
-    satisfied() {
-      return false
-    },
+        satisfied() {
+          return false
+        },
 
-    prompt() {
-      client.addResponse('app:response:name:hello')
-      client.done()
-    }
+      prompt() {
+          client.addTextResponse('Hello world, I mean human')
+          client.done()
+      }
   })
 
   const handleEvent = function(eventType, payload) {
