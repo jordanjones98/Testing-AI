@@ -20,84 +20,42 @@ exports.handle = function handle(client) {
     }
   })
 
-  const untrained = client.createStep({
-    satisfied() {
-      return false
-    },
-
-    prompt() {
-      client.addResponse('app:response:name:apology/untrained')
-      client.done()
-    }
-  })
-
   // Steps
-  const handleGreeting = client.createStep({
+
+  const whatIsHackCes = client.createStep({
       satisfied() {
           return false
       },
 
       prompt() {
-          client.addTextResponse('Hello world, I mean human')
-          client.done()
-      }
-  })
-
-  const handleGoodbye = client.createStep({
-      satisfied() {
-          return false
-      },
-
-      prompt() {
-          client.addTextResponse('See you later!')
+          client.addTextResponse('Hello! Hack CES is ____')
           client.done
       }
   })
 
-  const collectCity = client.createStep({
-      satisfied() {
-          return Boolean(client.getConversationState().weatherCity)
-      },
-
-      prompt() {
-          // Need to prompt user for city
-          console.log('Need to ask user for city')
-          client.done()
-      },
-  })
-
-  const provideWeather = client.createStep({
+  const getEmail = client.createStep({
       satisfied() {
           return false
       },
 
       prompt() {
-          // Need to provide weather
-          client.done()
-      },
+          client.addTextResponse('We are excited that you are interested! Could we please get your email to follow up?')
+          client.done
+      }
   })
 
   // Flow
-  // client.runFlow({
-  //   classifications: {
-  //       goodbye: 'goodbye',
-  //       greeting: 'greeting',
-  //   },
-  //   streams: {
-  //     greeting: handleGreeting,
-  //     goodbye: handleGoodbye,
-  //     main: 'onboarding',
-  //     onboarding: [sayHello],
-  //     end: [untrained]
-  //   }
-  // })
-
   client.runFlow({
-      classifications: {},
-      streams: {
-          main: 'getWeather',
-          hi: [sayHello],
-          getWeather: [collectCity, provideWeather]
-      }
+    classifications: {
+        greeting: 'greeting'
+    },
+    autoResponses: {
+      // configure responses to be automatically sent as predicted by the machine learning model
+    },
+    streams: {
+      greeting: ['whatIsHackCes', 'getEmail'],
+      main: 'onboarding',
+      onboarding: [sayHello, whatIsHackCes]
+    }
   })
 }
