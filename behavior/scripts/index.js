@@ -95,7 +95,7 @@ exports.handle = function handle(client) {
   client.runFlow({
       classifications: {},
       streams: {
-          main: 'getWeather'
+          main: 'getWeather',
           hi: [sayHello],
           getWeather: [collectCity, provideWeather]
       }
