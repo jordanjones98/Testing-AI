@@ -52,7 +52,7 @@ const showStuffCES = client.createStep({
     prompt() {
         client.addTextResponse("Cool I am too! Are you looking to set up any meetings there?")
         let settingUpMeeting = client.getMessagePart().classification.base_type.value
-        if (settingUpMeeting === 'affirmative') {
+        if (settingUpMeeting === 'affirmative/attending') {
           client.updateConversationState({
             isMeeting: true,
           })
