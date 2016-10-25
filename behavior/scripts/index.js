@@ -7,6 +7,7 @@ const showStuffForAdults = client.createStep({
     },
     prompt() {
         client.addTextResponse('Adult')
+        client.done
     }
 })
 
@@ -27,7 +28,7 @@ const checkIfOverEighteen = client.createStep({
   next() {
     const isOverEighteen = client.getConversationState().overAgeEighteen
     if (isOverEighteen === true) {
-        client.addTextResponse('You are over 18')
+        return 'adult'
     } else if (isOverEighteen === false) {
         return 'minor'
     }
