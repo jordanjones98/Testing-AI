@@ -52,12 +52,12 @@ const showStuffCES = client.createStep({
     prompt() {
         client.addTextResponse("Cool I am too! Are you looking to set up any meetings there?")
         let settingUpMeeting = client.getMessagePart().classification.base_type.value
-        if (settingUpMeeting === 'affirmative/attending') {
+        if (settingUpMeeting === 'affirmative/looking_to_meet') {
           client.updateConversationState({
             isMeeting: true,
           })
           return 'init.proceed' // `next` from this step will get called
-        } else if (settingUpMeeting === 'decline') {
+      } else if (settingUpMeeting === 'decline/looking_to_meet') {
           client.updateConversationState({
             isMeeting: false,
           })
@@ -99,7 +99,7 @@ const checkIfGoingToCES = client.createStep({
     // If the next message is a 'decline', like 'don't know'
     // or an 'affirmative', like 'yeah', or 'that's right'
     // then the current stream will be returned to
-    client.expect(client.getStreamName(), ['affirmative', 'decline'])
+    client.expect(client.getStreamName(), ['affirmative/attending', 'decline/attending'])
     client.done()
   }
 })
