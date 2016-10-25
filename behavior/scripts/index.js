@@ -37,7 +37,7 @@ const noShowStuffCES = client.createStep({
 
 const showStuffCES = client.createStep({
     satisfied() {
-        return false
+        return (typeof client.getConversationState().isMeeting !== 'undefined')
     },
 
     next() {
@@ -50,7 +50,6 @@ const showStuffCES = client.createStep({
     },
 
     prompt() {
-        client.addTextResponse("Cool I am too! Are you looking to set up any meetings there?")
         let settingUpMeeting = client.getMessagePart().classification.base_type.value
         if (settingUpMeeting === 'affirmative/looking_to_meet') {
           client.updateConversationState({
@@ -63,6 +62,7 @@ const showStuffCES = client.createStep({
           })
           return 'init.proceed' // `next` from this step will get called
         }
+        client.addTextResponse("Cool I am too! Are you looking to set up any meetings there?")
     }
 })
 
@@ -82,12 +82,12 @@ const checkIfGoingToCES = client.createStep({
 
   prompt() {
     let baseClassification = client.getMessagePart().classification.base_type.value
-    if (baseClassification === 'affirmative') {
+    if (baseClassification === 'affirmative/attending') {
       client.updateConversationState({
         isGoingToCES: true,
       })
       return 'init.proceed' // `next` from this step will get called
-    } else if (baseClassification === 'decline') {
+  } else if (baseClassification === 'decline/attending') {
       client.updateConversationState({
         isGoingToCES: false,
       })
