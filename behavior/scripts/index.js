@@ -106,7 +106,7 @@ exports.handle = function handle(client) {
     },
 
     prompt() {
-      client.addTextResponse('Hello world, I mean human')
+      client.addTextResponse('Hello welcome to HackCES! Are you going to CES?')
       client.done()
     }
   })
