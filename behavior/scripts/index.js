@@ -7,7 +7,7 @@ const showStuffForAdults = client.createStep({
     },
     prompt() {
         client.addTextResponse('Adult')
-        client.done
+        client.done()
     }
 })
 
@@ -17,6 +17,7 @@ const showStuffForMinors = client.createStep({
     },
     prompt() {
         client.addTextResponse('Minor')
+        client.done()
     }
 })
 
