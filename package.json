@@ -5,7 +5,11 @@
   "scripts": {},
   "license": "UNLICENSED",
   "private": true,
+  "scripts": {
+  "start": "initai-dev-server"
+  },
   "dependencies": {
+    "initai-dev-server": "^0.4.3",
     "initai-node": "https://gitlab.com/init-devs/node-client/repository/archive.tar.gz?ref=master"
   }
 }

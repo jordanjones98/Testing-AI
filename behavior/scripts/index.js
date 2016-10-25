@@ -1,46 +1,6 @@
 'use strict'
 
 exports.handle = function handle(client) {
-const showStuffCES = client.createStep({
-
-    satisfied() {
-        return (typeof client.getConversationState().willingToMeet !== 'undefined')
-    },
-
-    next() {
-      const willingToMeet = client.getConversationState().willingToMeet
-      if (willingToMeet === true) {
-          return 'willingToMeet'
-      } else if (willingToMeet === false) {
-          return 'notWillingToMeet'
-      }
-  },
-
-    prompt() {
-        let baseClassificationMeet = client.getMessagePart().classification.base_type.value
-        if (baseClassificationMeet === 'affirmative') {
-          client.updateConversationState({
-            willingToMeet: true,
-          })
-          return 'init.proceed' // `next` from this step will get called
-      } else if (baseClassificationMeet === 'decline') {
-          client.updateConversationState({
-            willingToMeet: false,
-          })
-          return 'init.proceed' // `next` from this step will get called
-        }
-
-        client.addTextResponse('Are you looking to meet people there?')
-
-        // If the next message is a 'decline', like 'don't know'
-        // or an 'affirmative', like 'yeah', or 'that's right'
-        // then the current stream will be returned to
-        client.expect(client.getStreamName(), ['affirmative', 'decline'])
-        client.done()
-    },
-
-
-})
 
 const willingToMeetMessage = client.createStep({
     satisfied() {
@@ -68,9 +28,41 @@ const noShowStuffCES = client.createStep({
     satisfied() {
         return false
     },
+
     prompt() {
         client.addTextResponse('Thats too bad.. If you would like to learn more about it check it out here! https://www.ces.tech/')
         client.done()
+    }
+})
+
+const showStuffCES = client.createStep({
+    satisfied() {
+        return false
+    },
+
+    next() {
+      const meeting = client.getConversationState().isMeeting
+      if (meeting === true) {
+          return 'WillingToMeet'
+      } else if (meeting === false) {
+          return 'notWillingToMeet'
+      }
+    },
+
+    prompt() {
+        client.addTextResponse("Cool I am too! Are you looking to set up any meetings there?")
+        let settingUpMeeting = client.getMessagePart().classification.base_type.value
+        if (settingUpMeeting === 'affirmative') {
+          client.updateConversationState({
+            isMeeting: true,
+          })
+          return 'init.proceed' // `next` from this step will get called
+        } else if (settingUpMeeting === 'decline') {
+          client.updateConversationState({
+            isMeeting: false,
+          })
+          return 'init.proceed' // `next` from this step will get called
+        }
     }
 })
 
