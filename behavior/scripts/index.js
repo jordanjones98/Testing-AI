@@ -1,37 +1,37 @@
 'use strict'
 
 exports.handle = function handle(client) {
-const showStuffForAdults = client.createStep({
+const showStuffCES = client.createStep({
     satisfied() {
         return false
     },
     prompt() {
-        client.addTextResponse('Adult')
+        client.addTextResponse('Awesome!')
         client.done()
     }
 })
 
-const showStuffForMinors = client.createStep({
+const noShowStuffCES = client.createStep({
     satisfied() {
         return false
     },
     prompt() {
-        client.addTextResponse('Minor')
+        client.addTextResponse('Thats too bad..')
         client.done()
     }
 })
 
-const checkIfOverEighteen = client.createStep({
+const checkIfGoingToCES = client.createStep({
   satisfied() {
-    return (typeof client.getConversationState().overAgeEighteen !== 'undefined')
+    return (typeof client.getConversationState().isGoingToCES !== 'undefined')
   },
 
   next() {
-    const isOverEighteen = client.getConversationState().overAgeEighteen
-    if (isOverEighteen === true) {
-        return 'adult'
-    } else if (isOverEighteen === false) {
-        return 'minor'
+    const isGoing = client.getConversationState().isGoingToCES
+    if (isGoing === true) {
+        return 'showCES'
+    } else if (isGoing === false) {
+        return 'noShowCES'
     }
 },
 
@@ -39,17 +39,17 @@ const checkIfOverEighteen = client.createStep({
     let baseClassification = client.getMessagePart().classification.base_type.value
     if (baseClassification === 'affirmative') {
       client.updateConversationState({
-        overAgeEighteen: true,
+        isGoingToCES: true,
       })
       return 'init.proceed' // `next` from this step will get called
     } else if (baseClassification === 'decline') {
       client.updateConversationState({
-        overAgeEighteen: false,
+        isGoingToCES: false,
       })
       return 'init.proceed' // `next` from this step will get called
     }
 
-    client.addTextResponse('Are you over the age of 18?')
+    client.addTextResponse('Hey! are you going to CES?')
 
     // If the next message is a 'decline', like 'don't know'
     // or an 'affirmative', like 'yeah', or 'that's right'
@@ -62,9 +62,9 @@ const checkIfOverEighteen = client.createStep({
 client.runFlow({
   streams: {
     main: 'showContent',
-    showContent: [checkIfOverEighteen],
-    adult: [showStuffForAdults],
-    minor: [showStuffForMinors],
+    showContent: [checkIfGoingToCES],
+    showCES: [showStuffCES],
+    noShowCES: [noShowStuffCES],
   }
 })
 
