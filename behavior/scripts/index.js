@@ -50,13 +50,13 @@ const showStuffCES = client.createStep({
     },
 
     prompt() {
-        let settingUpMeeting = client.getMessagePart().classification.base_type.value
-        if (settingUpMeeting === 'affirmative/looking_to_meet') {
+        let subClassificationOne = client.getMessagePart().classification.sub_type.value
+        if (subClassificationOne === 'affirmative/looking_to_meet') {
           client.updateConversationState({
             isMeeting: true,
           })
           return 'init.proceed' // `next` from this step will get called
-      } else if (settingUpMeeting === 'decline/looking_to_meet') {
+      } else if (subClassificationOne === 'decline/looking_to_meet') {
           client.updateConversationState({
             isMeeting: false,
           })
@@ -81,13 +81,13 @@ const checkIfGoingToCES = client.createStep({
 },
 
   prompt() {
-    let baseClassification = client.getMessagePart().classification.base_type.value
-    if (baseClassification === 'affirmative/attending') {
+    let subClassification = client.getMessagePart().classification.sub_type.value
+    if (subClassification === 'affirmative/attending') {
       client.updateConversationState({
         isGoingToCES: true,
       })
       return 'init.proceed' // `next` from this step will get called
-  } else if (baseClassification === 'decline/attending') {
+  } else if (subClassification === 'decline/attending') {
       client.updateConversationState({
         isGoingToCES: false,
       })
@@ -107,7 +107,7 @@ const checkIfGoingToCES = client.createStep({
 client.runFlow({
   streams: {
     main: 'showContent',
-    showContent: [checkIfGoingToCES],
+    showContent: [checkIfGoingToCES, showStuffCES],
     showCES: [showStuffCES],
     noShowCES: [noShowStuffCES],
     willingToMeet: [willingToMeetMessage],
