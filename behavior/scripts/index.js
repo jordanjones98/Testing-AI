@@ -63,6 +63,8 @@ const showStuffCES = client.createStep({
           return 'init.proceed' // `next` from this step will get called
         }
         client.addTextResponse("Cool I am too! Are you looking to set up any meetings there?")
+        client.expect(client.getStreamName(), ['affirmative/looking_to_meet', 'decline/looking_to_meet'])
+        client.done()
     }
 })
 
@@ -107,7 +109,7 @@ const checkIfGoingToCES = client.createStep({
 client.runFlow({
   streams: {
     main: 'showContent',
-    showContent: [checkIfGoingToCES, showStuffCES],
+    showContent: [checkIfGoingToCES],
     showCES: [showStuffCES],
     noShowCES: [noShowStuffCES],
     willingToMeet: [willingToMeetMessage],
